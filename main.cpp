@@ -2,9 +2,11 @@
 #include <iostream>
 #include <windows.h>
 #include "characters.hpp"
-#include "map.hpp"
+#include "map_generator.hpp"
 
 float current_frame = 0;
+
+
 
 void run_animation(game::characters &player, game::directions dir, float time){
     player.m_direction = dir;
@@ -25,7 +27,10 @@ void run_animation(game::characters &player, game::directions dir, float time){
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(900, 500), "SFML works!");
+    init_map();
+    create_map();
+
+    sf::RenderWindow window(sf::VideoMode(1920, 1440), "Game");
     window.setFramerateLimit(120);
 
     sf::Clock clock;
@@ -73,8 +78,8 @@ int main()
         for (int i = 0; i < H_MAP; i++)
             for (int j = 0; j < W_MAP; j++)
             {
-                if (TileMap[i][j] == '0')  s_map.setTextureRect(sf::IntRect(0, 0, 32, 32)); //если встретили символ пробел, то рисуем 1й квадратик
-                if (TileMap[i][j] == '1') s_map.setTextureRect(sf::IntRect(64, 0, 32, 32));//если встретили символ 0, то рисуем 3й квадратик
+                if (get_map()[i][j] == '0')  s_map.setTextureRect(sf::IntRect(0, 0, 32, 32)); //если встретили символ пробел, то рисуем 1й квадратик
+                if (get_map()[i][j] == '1') s_map.setTextureRect(sf::IntRect(64, 0, 32, 32));//если встретили символ 0, то рисуем 3й квадратик
 
 
                 s_map.setPosition(j * 32, i * 32);//по сути раскидывает квадратики, превращая в карту. то есть задает каждому из них позицию. если убрать, то вся карта нарисуется в одном квадрате 32*32 и мы увидим один квадрат

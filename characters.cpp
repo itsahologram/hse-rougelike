@@ -1,4 +1,5 @@
 #include "characters.hpp"
+
 namespace game{
     void characters::update(float time) {
         switch (m_direction) {

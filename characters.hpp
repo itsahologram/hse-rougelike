@@ -3,8 +3,9 @@
 
 #include <SFML/Graphics.hpp>
 #include <string>
-#include "map.hpp"
 #include <utility>
+#include "map_generator.hpp"
+
 
 namespace game {
 
@@ -32,7 +33,7 @@ namespace game {
         void iteraction_with_map(){
             for (int i = m_y / 32; i < (m_y + m_high)/32; i++){
                 for (int j = m_x / 32; j < (m_x + m_width)/32; j++){
-                    if (TileMap[i][j] == '1'){
+                    if (get_map()[i][j] == '1'){
                         if (m_dy > 0){
                             m_y = i*32 - m_high;
                         }
