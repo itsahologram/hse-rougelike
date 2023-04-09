@@ -7,7 +7,6 @@ add_executable(TEST_SFML
         main.cpp
         characters.cpp
         characters.hpp
-        map.hpp
         map_generator.hpp
         map_generator.cpp
         )
