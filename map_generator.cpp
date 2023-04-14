@@ -81,8 +81,8 @@ void init_map() {
 }
 
 void create_room(int x, int y, int x_f, int y_f) {
-  for (int i = x; i < x_f; i++) {
-    for (int j = y; j < y_f; j++) {
+  for (int i = x+1; i < x_f-1; i++) {
+    for (int j = y+1; j < y_f-1; j++) {
       get_map()[j][i] = '0';
     }
   }

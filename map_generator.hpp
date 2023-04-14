@@ -10,8 +10,8 @@
 
 std::vector<std::vector<char>> &get_map();
 
-const int map_height = 45; 
-const int map_weight = 59;
+const int map_height = 45;
+const int map_weight = 60;
 
 const int min_room_height = 5;
 const int min_room_weight = 8;

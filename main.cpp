@@ -34,7 +34,7 @@ int main() {
   game::characters player("hero.png", 64, 64, 32, 48);
 
   sf::Image map_img;
-  map_img.loadFromFile("../images/map.png");
+  map_img.loadFromFile("../images/new_map.png");
   sf::Texture map;
   map.loadFromImage(map_img);
   sf::Sprite s_map;
@@ -69,11 +69,11 @@ int main() {
       for (int j = 0; j < map_weight; j++) {
         if (get_map()[i][j] == '0')
           s_map.setTextureRect(sf::IntRect(
-              0, 0, 32,
+              461, 320, 32,
               32)); //если встретили символ пробел, то рисуем 1й квадратик
         if (get_map()[i][j] == '1')
           s_map.setTextureRect(sf::IntRect(
-              64, 0, 32, 32)); //если встретили символ 0, то рисуем 3й квадратик
+              384, 0, 32, 32)); //если встретили символ 0, то рисуем 3й квадратик
 
         s_map.setPosition(
             j * 32, i * 32); //по сути раскидывает квадратики, превращая в
