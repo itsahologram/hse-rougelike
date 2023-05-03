@@ -8,8 +8,8 @@ std::uniform_int_distribution<> rand_x(1, map_weight - 5);
 std::uniform_int_distribution<> rand_y(1, map_height - 5);
 
 std::vector<std::vector<char>> &get_map() {
-  static std::vector<std::vector<char>> map;
-  return map;
+  static std::vector<std::vector<char>> tile_map;
+  return tile_map;
 }
 
 struct room {
@@ -87,6 +87,19 @@ void create_room(int x, int y, int x_f, int y_f) {
     }
   }
 }
+
+void create_coffee(){
+    int coffee_complete = 0;
+    while (coffee_complete < count_coffee){
+        int set_x = rand_x(generator);
+        int set_y = rand_y(generator);
+        if (get_map()[set_y][set_x] == '0'){
+            get_map()[set_y][set_x] = 'c';
+            coffee_complete++;
+        }
+    }
+}
+
 void create_map() {
   int set_x_f = 1 + rand_w(generator);
   int set_y_f = 1 + rand_h(generator);
@@ -119,4 +132,5 @@ void create_map() {
     last_room.create_tunnel(new_room);
     last_room = new_room;
   }
+  create_coffee();
 }

@@ -10,16 +10,17 @@
 
 std::vector<std::vector<char>> &get_map();
 
-const int map_height = 45;
-const int map_weight = 60;
+const int map_height = 60;
+const int map_weight = 100;
 
 const int min_room_height = 5;
 const int min_room_weight = 8;
 
-const int max_room_height = 20;
-const int max_room_weight = 20;
+const int max_room_height = 30;
+const int max_room_weight = 30;
 
-const int count_room = 30;
+const int count_room = 60;
+const int count_coffee = 25;
 
 void init_map();
 

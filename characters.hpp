@@ -8,12 +8,15 @@
 
 namespace game {
 
-enum directions { UP, DOWN, LEFT, RIGHT };
+enum directions { UP, DOWN, LEFT, RIGHT, STOP };
 
 struct characters {
+private:
+    float m_x = 0, m_y = 0;
 public:
-  float m_x = 0, m_y = 0, m_width = 0, m_high = 0, m_dx = 0, m_dy = 0,
-        m_speed = 0;
+  float m_width = 0, m_high = 0, m_dx = 0, m_dy = 0,
+        m_speed = 0.15;
+  int m_last_coffee = -5;
   directions m_direction = RIGHT;
   std::string m_file_name;
   sf::Image m_image;
@@ -29,8 +32,10 @@ public:
     m_sprite.setTextureRect(sf::IntRect(0, 0, w, h));
   }
 
-  void update(float time);
-  void iteraction_with_map();
+  float get_x() const { return m_x; }
+  float get_y() const { return m_y; }
+  void update(float timem, int &coffee_time);
+  void iteraction_with_map(int &coffee_time);
 }; // characters
 } // namespace game
 

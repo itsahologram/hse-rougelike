@@ -9,7 +9,7 @@ add_executable(TEST_SFML
         characters.hpp
         map_generator.hpp
         map_generator.cpp
-        )
+        view.cpp view.hpp)
 
 set(SFML_STATIC_LIBRARIES TRUE)
 set(SFML_DIR C:/SFML-2.5.1/lib/cmake/SFML)

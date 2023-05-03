@@ -1,5 +1,6 @@
 #include "characters.hpp"
 #include "map_generator.hpp"
+#include "view.hpp"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <windows.h>
@@ -8,7 +9,6 @@ float current_frame = 0;
 
 void run_animation(game::characters &player, game::directions dir, float time) {
   player.m_direction = dir;
-  player.m_speed = 0.1;
   current_frame += 0.005 * time;
   if (current_frame > 8) {
     current_frame = 0;
@@ -27,9 +27,14 @@ int main() {
   create_map();
 
   sf::RenderWindow window(sf::VideoMode(1920, 1440), "Game");
+  game::view.reset(sf::FloatRect(0, 0, 640, 480));
+
   window.setFramerateLimit(120);
 
   sf::Clock clock;
+  sf::Clock bonus_clock;
+
+  int coffee_time = 0;
 
   game::characters player("hero.png", 64, 64, 32, 48);
 
@@ -40,8 +45,16 @@ int main() {
   sf::Sprite s_map;
   s_map.setTexture(map);
 
+  sf::Image coffee_img;
+  coffee_img.loadFromFile("../images/coffee.png");
+  sf::Texture coffee;
+  coffee.loadFromImage(coffee_img);
+  sf::Sprite s_coffee;
+  s_coffee.setTexture(coffee);
+
   while (window.isOpen()) {
     float time = clock.getElapsedTime().asMicroseconds();
+    coffee_time = bonus_clock.getElapsedTime().asSeconds();
     clock.restart();
     time = time / 800;
 
@@ -60,27 +73,42 @@ int main() {
 
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
       run_animation(player, game::DOWN, time);
+    } else {
+        run_animation(player, game::STOP, time);
     }
+    game::camera_follow_the_player(player.get_x(), player.get_y());
+    player.update(time, coffee_time);
 
-    player.update(time);
-
-    window.clear();
+    game::zoom_view();
+    window.setView(game::view);
+    game::view.reset(sf::FloatRect(0, 0, 640, 480));
+      window.clear();
     for (int i = 0; i < map_height; i++)
       for (int j = 0; j < map_weight; j++) {
-        if (get_map()[i][j] == '0')
-          s_map.setTextureRect(sf::IntRect(
-              461, 320, 32,
-              32)); //если встретили символ пробел, то рисуем 1й квадратик
-        if (get_map()[i][j] == '1')
-          s_map.setTextureRect(sf::IntRect(
-              384, 0, 32, 32)); //если встретили символ 0, то рисуем 3й квадратик
+        if (get_map()[i][j] == '0') {
+            s_map.setTextureRect(sf::IntRect(
+                    461, 320, 32,
+                    32)); //если встретили символ пробел, то рисуем 1й квадратик
+        }
+        if (get_map()[i][j] == '1') {
+            s_map.setTextureRect(sf::IntRect(
+                    384, 0, 32, 32)); //если встретили символ 0, то рисуем 3й квадратик
+        }
+        if (get_map()[i][j] == 'c'){
+            s_map.setTextureRect(sf::IntRect(
+                    461, 320, 32,
+                    32));
+            s_coffee.setTextureRect(sf::IntRect(0, 0, 16, 16));
+            s_coffee.setPosition(j*32, i * 32);
 
+        }
         s_map.setPosition(
             j * 32, i * 32); //по сути раскидывает квадратики, превращая в
                              //карту. то есть задает каждому из них позицию.
                              //если убрать, то вся карта нарисуется в одном
                              //квадрате 32*32 и мы увидим один квадрат
-        window.draw(s_map); //рисуем квадратики на экран
+        window.draw(s_map);
+        window.draw(s_coffee);
       }
     window.draw(player.m_sprite);
     window.display();
