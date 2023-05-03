@@ -8,9 +8,8 @@ add_executable(TEST_SFML
         src/main.cpp
         src/characters.cpp
         src/map_generator.cpp
-        src/view.cpp
         src/animation.cpp
-        )
+        include/animation.hpp)
 
 set(SFML_STATIC_LIBRARIES TRUE)
 set(SFML_DIR C:/SFML-2.5.1/lib/cmake/SFML)
