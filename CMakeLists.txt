@@ -3,13 +3,14 @@ project(TEST_SFML)
 
 set(CMAKE_CXX_STANDARD 17)
 
+include_directories(include)
 add_executable(TEST_SFML
-        main.cpp
-        characters.cpp
-        characters.hpp
-        map_generator.hpp
-        map_generator.cpp
-        view.cpp view.hpp)
+        src/main.cpp
+        src/characters.cpp
+        src/map_generator.cpp
+        src/view.cpp
+        src/animation.cpp
+        )
 
 set(SFML_STATIC_LIBRARIES TRUE)
 set(SFML_DIR C:/SFML-2.5.1/lib/cmake/SFML)

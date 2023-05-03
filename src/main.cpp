@@ -5,22 +5,6 @@
 #include <iostream>
 #include <windows.h>
 
-float current_frame = 0;
-
-void run_animation(game::characters &player, game::directions dir, float time) {
-  player.m_direction = dir;
-  current_frame += 0.005 * time;
-  if (current_frame > 8) {
-    current_frame = 0;
-  }
-  if (dir == game::LEFT) {
-    player.m_sprite.setTextureRect(
-        sf::IntRect(32, 48 * int(current_frame), -32, 48));
-  } else if (dir == game::RIGHT) {
-    player.m_sprite.setTextureRect(
-        sf::IntRect(0, 48 * int(current_frame), 32, 48));
-  }
-}
 
 int main() {
   init_map();
@@ -34,9 +18,11 @@ int main() {
   sf::Clock clock;
   sf::Clock bonus_clock;
 
+  double current_frame = 0;
+
   int coffee_time = 0;
 
-  game::characters player("hero.png", 64, 64, 32, 48);
+  game::players player("hero.png", 64, 64, 32, 48);
 
   sf::Image map_img;
   map_img.loadFromFile("../images/new_map.png");
@@ -53,28 +39,28 @@ int main() {
   s_coffee.setTexture(coffee);
 
   while (window.isOpen()) {
-    float time = clock.getElapsedTime().asMicroseconds();
-    coffee_time = bonus_clock.getElapsedTime().asSeconds();
+    int time = (int)clock.getElapsedTime().asMicroseconds();
+    coffee_time = (int)bonus_clock.getElapsedTime().asSeconds();
     clock.restart();
     time = time / 800;
 
-    sf::Event event;
+    sf::Event event{};
     while (window.pollEvent(event)) {
       if (event.type == sf::Event::Closed)
         window.close();
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-      run_animation(player, game::LEFT, time);
+      player.animation(game::LEFT, time, current_frame);
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-      run_animation(player, game::RIGHT, time);
+        player.animation(game::RIGHT, time, current_frame);
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-      run_animation(player, game::UP, time);
+        player.animation(game::UP, time, current_frame);
 
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-      run_animation(player, game::DOWN, time);
+        player.animation(game::DOWN, time, current_frame);
     } else {
-        run_animation(player, game::STOP, time);
+        player.animation(game::STOP, time, current_frame);
     }
     game::camera_follow_the_player(player.get_x(), player.get_y());
     player.update(time, coffee_time);
@@ -88,25 +74,22 @@ int main() {
         if (get_map()[i][j] == '0') {
             s_map.setTextureRect(sf::IntRect(
                     461, 320, 32,
-                    32)); //если встретили символ пробел, то рисуем 1й квадратик
+                    32));
         }
         if (get_map()[i][j] == '1') {
             s_map.setTextureRect(sf::IntRect(
-                    384, 0, 32, 32)); //если встретили символ 0, то рисуем 3й квадратик
+                    384, 0, 32, 32));
         }
         if (get_map()[i][j] == 'c'){
             s_map.setTextureRect(sf::IntRect(
                     461, 320, 32,
                     32));
             s_coffee.setTextureRect(sf::IntRect(0, 0, 16, 16));
-            s_coffee.setPosition(j*32, i * 32);
+            s_coffee.setPosition((float)(j*32),(float)(i * 32));
 
         }
         s_map.setPosition(
-            j * 32, i * 32); //по сути раскидывает квадратики, превращая в
-                             //карту. то есть задает каждому из них позицию.
-                             //если убрать, то вся карта нарисуется в одном
-                             //квадрате 32*32 и мы увидим один квадрат
+                (float)(j * 32), (float)(i * 32));
         window.draw(s_map);
         window.draw(s_coffee);
       }
