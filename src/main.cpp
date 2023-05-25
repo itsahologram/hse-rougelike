@@ -7,7 +7,7 @@
 
 double current_frame = 0;
 
-void keyboard_controller(game::players &player, int time) {
+void keyboard_controller(game::players &player, float time) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
         player.animation(game::LEFT, time, current_frame);
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
@@ -22,31 +22,61 @@ void keyboard_controller(game::players &player, int time) {
     }
 }
 
-void draw_map(sf::RenderWindow &window, sf::Sprite &s_map, sf::Sprite &s_coffee){
+void draw_map(sf::RenderWindow &window, sf::Sprite &s_map, sf::Sprite &s_coffee, sf::Sprite &s_npc,
+              sf::Sprite &s_quest_obj){
     for (int i = 0; i < map_height; i++)
         for (int j = 0; j < map_weight; j++) {
             if (get_map()[i][j] == '0') {
                 s_map.setTextureRect(sf::IntRect(
                         461, 320, 32,
                         32));
+                s_map.setPosition(
+                        (float) (j * 32), (float) (i * 32));
+                window.draw(s_map);
             }
-            if (get_map()[i][j] == '1') {
+            else if (get_map()[i][j] == '1') {
                 s_map.setTextureRect(sf::IntRect(
                         384, 0, 32, 32));
+                s_map.setPosition(
+                        (float) (j * 32), (float) (i * 32));
+                window.draw(s_map);
+
             }
-            if (get_map()[i][j] == 'c') {
+            else if (get_map()[i][j] == 'c') {
                 s_map.setTextureRect(sf::IntRect(
                         461, 320, 32,
                         32));
+                s_map.setPosition(
+                        (float) (j * 32), (float) (i * 32));
                 s_coffee.setTextureRect(sf::IntRect(0, 0, 16, 16));
                 s_coffee.setPosition((float) (j * 32), (float) (i * 32));
+                window.draw(s_map);
+                window.draw(s_coffee);
 
+            } else if (get_map()[i][j] == 'o'){
+                s_map.setTextureRect(sf::IntRect(
+                        461, 320, 32,
+                        32));
+                s_quest_obj.setTextureRect(sf::IntRect(1, 1, 32, 32));
+                s_quest_obj.setPosition((float) (j * 32), (float) (i * 32));
+                s_map.setPosition(
+                        (float) (j * 32), (float) (i * 32));
+                window.draw(s_map);
+                window.draw(s_quest_obj);
+
+            } else if (get_map()[i][j] == 'n'){
+                s_npc.setPosition((float) (j * 32), (float) (i * 32));
+                s_map.setPosition(
+                        (float) (j * 32), (float) (i * 32));
+                window.draw(s_map);
+                window.draw(s_npc);
             }
-            s_map.setPosition(
-                    (float) (j * 32), (float) (i * 32));
-            window.draw(s_map);
-            window.draw(s_coffee);
+
         }
+}
+
+void draw_inf_about_quest(game::players &player, sf::Text &text){
+    text.setPosition(player.m_x - 210, player.m_y - 240);
 }
 
 
@@ -66,6 +96,9 @@ int main() {
     int coffee_time = 0;
 
     game::players player("hero.png", 64, 64, 32, 48);
+    game::npc first_npc("npc2.png", 1, 1, 32, 32);
+    first_npc.set_coordinates(set_x_f - 2, 2);
+
 
     sf::Image map_img;
     map_img.loadFromFile("../images/new_map.png");
@@ -81,10 +114,28 @@ int main() {
     sf::Sprite s_coffee;
     s_coffee.setTexture(coffee);
 
+    sf::Image book_img;
+    book_img.loadFromFile("../images/books.png");
+    sf::Texture book;
+    book.loadFromImage(book_img);
+    sf::Sprite s_book;
+    s_book.setTexture(book);
+
+    sf::Font font;
+    font.loadFromFile("../fonts/YanoneKaffeesatz-VariableFont_wght.ttf");
+    sf::Text text("", font, 30);
+    text.setFillColor(sf::Color::Red);
+    text.setStyle(sf::Text::Bold);
+    text.setString( L"Квеста нет");
+
+
+
     while (window.isOpen()) {
 
-        int time = (int) clock.getElapsedTime().asMicroseconds();
+        float time = clock.getElapsedTime().asMicroseconds();
         coffee_time = (int) bonus_clock.getElapsedTime().asSeconds();
+        //window.setVerticalSyncEnabled(true);
+        //window.setFramerateLimit(120);
         clock.restart();
         time = time / 800;
 
@@ -93,21 +144,25 @@ int main() {
             if (event.type == sf::Event::Closed)
                 window.close();
         }
-
         keyboard_controller(player, time);
-        game::camera_follow_the_player(player.get_x(), player.get_y());
-        player.update(time, coffee_time);
+        player.update(time, coffee_time, text);
 
+        game::camera_follow_the_player(player.get_x(), player.get_y());
         game::zoom_view();
         window.setView(game::view);
         game::view.reset(sf::FloatRect(0, 0, 640, 480));
+
+
         window.clear();
 
-        draw_map(window, s_map, s_coffee);
-
+        draw_map(window, s_map, s_coffee, first_npc.m_sprite, s_book);
         window.draw(player.m_sprite);
+
+        draw_inf_about_quest(player, text);
+        window.draw(text);
+
         window.display();
-        Sleep(time / 80);
+        //Sleep(time / 80);
     }
 
     return 0;

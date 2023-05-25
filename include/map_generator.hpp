@@ -7,6 +7,7 @@
 #include <random>
 #include <string>
 #include <vector>
+#include "characters.hpp"
 
 std::vector<std::vector<char>> &get_map();
 
@@ -22,10 +23,14 @@ const int max_room_weight = 30;
 const int count_room = 60;
 const int count_coffee = 25;
 
+static int set_x_f = 0;
+static int set_y_f = 0;
+
 void init_map();
 
 void create_room(int x, int y, int x_f, int y_f);
 
 void create_map();
+void add_quest_obj();
 
 #endif // TEST_SFML_MAP_GENERATOR_HPP

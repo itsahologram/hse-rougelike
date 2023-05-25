@@ -101,9 +101,11 @@ void create_coffee() {
 }
 
 void create_map() {
-    int set_x_f = 1 + rand_w(generator);
-    int set_y_f = 1 + rand_h(generator);
+    set_x_f = 1 + rand_w(generator);
+    set_y_f = 1 + rand_h(generator);
+
     create_room(1, 1, set_x_f, set_y_f);
+
     std::vector<room> all_room;
     room last_room = room(1, 1, set_x_f, set_y_f);
 
@@ -132,5 +134,23 @@ void create_map() {
         last_room.create_tunnel(new_room);
         last_room = new_room;
     }
+    get_map()[2][set_x_f - 2] = 'n';
     create_coffee();
+}
+
+void game::npc::set_coordinates(int new_x, int new_y) {
+    m_x = new_x;
+    m_y = new_y;
+}
+
+void add_quest_obj(){
+    int count_obj = 0;
+    while (count_obj < 1){
+        auto new_x = rand_x(generator);
+        auto new_y = rand_y(generator);
+        if (get_map()[new_y][new_x] == '0'){
+            get_map()[new_y][new_x] = 'o';
+            count_obj++;
+        }
+    }
 }

@@ -2,7 +2,7 @@
 
 namespace game {
 
-    void players::animation(game::directions dir, int time, double &current_frame) {
+    void players::animation(game::directions dir, float time, double &current_frame) {
         m_direction = dir;
         current_frame += 0.005 * time;
         if (current_frame > 8) {
