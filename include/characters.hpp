@@ -23,12 +23,14 @@ namespace game {
     };
 
     struct quest_find_some_obj: public abstract_quest {
-        sf::Text m_name_of_quest;
+        sf::Text m_name_of_quest{};
 
-        int m_count_of_obj;
-        int m_current_count_of_obj;
-        // char type_of_obj; 
+        int m_count_of_obj = 0;
+        int m_current_count_of_obj = 0;
+        // char type_of_obj;
 
+        quest_find_some_obj(sf::Text name_of_quest, int count_of_obj): m_name_of_quest(name_of_quest),
+                                                                       m_count_of_obj(count_of_obj){};
         void update_status(bool is_start, bool is_passed) override {
             if (is_start){
                 m_status = START;
