@@ -23,13 +23,14 @@ namespace game {
                 m_acceleration_x = 0;
                 m_acceleration_y = 0;
         }
-        if (coffee_timer - m_last_coffee_time >= 5) {
-            m_speed = std::max(m_speed / 1.1, 0.15);
+        if (coffee_timer - m_last_coffee_time >= 15) {
+            m_speed = std::max(m_speed / 1.5, 0.15);
         }
         m_x += m_acceleration_x * time;
         m_y += m_acceleration_y * time;
 
         interaction_with_map(coffee_timer, text);
+        text.setString(m_current_quest->m_name_of_quest);
         m_sprite.setPosition((float) m_x, (float) m_y);
     }
 
@@ -50,28 +51,29 @@ namespace game {
                         m_x = j * 32 + 32;
                     }
                 } else if (get_map()[i][j] == 'c') {
-                    m_speed *= 1.3;
+                    m_speed *= 1.5;
                     get_map()[i][j] = '0';
                     m_last_coffee_time = coffee_timer;
-                } else if (get_map()[i][j] == 'n'){
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::E) && !is_quest){
-                        is_quest = true;
-                        text.setString( L"Новый квест");
-                        add_quest_obj();
+                } else if (get_map()[i][j] == 'n') {
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::E) &&
+                            (m_current_quest->m_status == NONE || m_current_quest->m_status == COMPLETE)) {
+                        std::cout << 124 << "\n";
+                        m_current_quest = new quest_find_some_obj(L"Новый квест", 1);
+                        m_current_quest->update_status(true, false);
+                        add_quest_obj(1);
+                    }
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::F) && m_current_quest->m_status == IN_PROGRESS) {
+                        m_current_quest->update_status(false, true);
+                        m_current_quest->m_name_of_quest = L"Квест сдан";
 
                     }
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::F) && is_quest && is_obj){
-                        is_complete = true;
-                        is_obj = false;
-                        is_quest = false;
-                        text.setString( L"Квест сдан");
-                    }
-                } else if (get_map()[i][j] == 'o'){
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)){
-                        is_obj = true;
+                } else if (get_map()[i][j] == 'o') {
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::E) && m_current_quest->m_status == START) {
+                        if (auto *q = dynamic_cast<quest_find_some_obj *>(m_current_quest)) {
+                            q->m_current_count_of_obj++;
+                        }
+                        m_current_quest->update_status(false, false);
                         get_map()[i][j] = '0';
-                        text.setString( L"Объект получен");
-
                     }
                 }
             }

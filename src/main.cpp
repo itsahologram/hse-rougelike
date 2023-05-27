@@ -1,3 +1,4 @@
+#include "Button.hpp"
 #include "characters.hpp"
 #include "map_generator.hpp"
 #include "view.hpp"
@@ -84,7 +85,7 @@ int main() {
     init_map();
     create_map();
 
-    sf::RenderWindow window(sf::VideoMode(1920, 1440), "Game");
+    sf::RenderWindow window(sf::VideoMode(1280, 720), "Game");
     game::view.reset(sf::FloatRect(0, 0, 640, 480));
 
     window.setFramerateLimit(120);
@@ -129,13 +130,33 @@ int main() {
     text.setString( L"Квеста нет");
 
 
+    sf::Image main_d_img;
+    main_d_img.loadFromFile("../images/dialog_main.png");
+    sf::Texture main_d_text;
+    main_d_text.loadFromImage(main_d_img);
+//    sf::Sprite main_d_s; // Уберу это после
+//    main_d_s.setTexture(main_d_text);
+
+
+    sf::Image buttom1;
+    buttom1.loadFromFile("../images/buttom_1.png");
+    sf::Texture buttom1_t;
+    buttom1_t.loadFromImage(buttom1);
+    sf::Image buttom2;
+    buttom2.loadFromFile("../images/buttom2.png");
+    sf::Texture buttom2_t;
+    buttom2_t.loadFromImage(buttom2);
+
+    game::dialog d(-100, 140, main_d_text, &window, buttom1_t, buttom2_t, font);
 
     while (window.isOpen()) {
 
         float time = clock.getElapsedTime().asMicroseconds();
         coffee_time = (int) bonus_clock.getElapsedTime().asSeconds();
+        float buttom_time = clock.getElapsedTime().asSeconds();
         //window.setVerticalSyncEnabled(true);
         //window.setFramerateLimit(120);
+
         clock.restart();
         time = time / 800;
 
@@ -161,6 +182,23 @@ int main() {
         draw_inf_about_quest(player, text);
         window.draw(text);
 
+
+        d.set_posision(player.get_x() - 150, player.get_y() + 70);
+
+        if (event.type == sf::Event::MouseButtonPressed) {
+            if (event.mouseButton.button == sf::Mouse::Left) {
+                sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
+                sf::Vector2f pos = window.mapPixelToCoords(pixelPos);
+                d.check_click(pos, buttom_time);
+            }
+        }
+        if (event.type == sf::Event::MouseButtonReleased) {
+            if (event.mouseButton.button == sf::Mouse::Left) {
+                d.reset_b();
+            }
+        }
+
+        d.draw();
         window.display();
         //Sleep(time / 80);
     }

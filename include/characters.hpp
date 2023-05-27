@@ -2,9 +2,11 @@
 #define TEST_SFML_CHARACTERS_HPP
 
 #include "map_generator.hpp"
+#include "quest.hpp"
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <utility>
+
 
 namespace game {
 
@@ -12,37 +14,6 @@ namespace game {
         UP, DOWN, LEFT, RIGHT, STOP
     };
 
-    enum quest_status {
-        START, IN_PROGRESS, COMPLETE, NONE
-    };
-
-    struct abstract_quest {
-        game::quest_status m_status = NONE;
-
-        virtual void update_status(bool is_start, bool is_passed) = 0;
-    };
-
-    struct quest_find_some_obj: public abstract_quest {
-        sf::Text m_name_of_quest{};
-
-        int m_count_of_obj = 0;
-        int m_current_count_of_obj = 0;
-        // char type_of_obj;
-
-        quest_find_some_obj(sf::Text name_of_quest, int count_of_obj): m_name_of_quest(name_of_quest),
-                                                                       m_count_of_obj(count_of_obj){};
-        void update_status(bool is_start, bool is_passed) override {
-            if (is_start){
-                m_status = START;
-            } else if (is_passed){
-                m_status = COMPLETE;
-            } else if (m_current_count_of_obj == m_count_of_obj) {
-                m_status = IN_PROGRESS;
-            }
-        }
-
-
-    };
 
     struct characters {
         float m_x = 0, m_y = 0;
@@ -83,6 +54,8 @@ namespace game {
         bool is_obj = false;
         bool is_complete = false;
 
+        abstract_quest* m_current_quest = new quest_find_some_obj();
+
 
 
     public:
@@ -96,12 +69,15 @@ namespace game {
             return is_obj;
         }
 
+
         void update(float time, int coffee_timer, sf::Text &text);
 
         void interaction_with_map(int coffee_timer, sf::Text &text);
 
         players(std::string file_name, float x, float y,
-                int width, int high) : characters(std::move(file_name), x, y, width, high) {};
+                int width, int high) : characters(std::move(file_name), x, y, width, high) {
+            m_current_quest = new quest_find_some_obj();
+        };
 
         void animation(game::directions dir, float time, double &current_frame);
     };

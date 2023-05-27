@@ -31,6 +31,6 @@ void init_map();
 void create_room(int x, int y, int x_f, int y_f);
 
 void create_map();
-void add_quest_obj();
+void add_quest_obj(int count);
 
 #endif // TEST_SFML_MAP_GENERATOR_HPP
