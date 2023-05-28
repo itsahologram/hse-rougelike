@@ -24,7 +24,7 @@ namespace game {
                 m_acceleration_y = 0;
         }
         if (coffee_timer - m_last_coffee_time >= 15) {
-            m_speed = std::max(m_speed / 1.5, 0.15);
+            m_speed = std::max(m_speed / 2, 200.0);
         }
         m_x += m_acceleration_x * time;
         m_y += m_acceleration_y * time;
@@ -51,7 +51,7 @@ namespace game {
                         m_x = j * 32 + 32;
                     }
                 } else if (get_map()[i][j] == 'c') {
-                    m_speed *= 1.5;
+                    m_speed *= 2;
                     get_map()[i][j] = '0';
                     m_last_coffee_time = coffee_timer;
                 } else if (get_map()[i][j] == 'n') {

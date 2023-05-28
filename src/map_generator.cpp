@@ -143,9 +143,9 @@ void game::npc::set_coordinates(int new_x, int new_y) {
     m_y = new_y;
 }
 
-void add_quest_obj(){
+void add_quest_obj(int count){
     int count_obj = 0;
-    while (count_obj < 1){
+    while (count_obj < count){
         auto new_x = rand_x(generator);
         auto new_y = rand_y(generator);
         if (get_map()[new_y][new_x] == '0'){

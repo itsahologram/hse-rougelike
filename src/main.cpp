@@ -5,6 +5,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <windows.h>
+#include "asset_manager.hpp"
 
 double current_frame = 0;
 
@@ -24,7 +25,7 @@ void keyboard_controller(game::players &player, float time) {
 }
 
 void draw_map(sf::RenderWindow &window, sf::Sprite &s_map, sf::Sprite &s_coffee, sf::Sprite &s_npc,
-              sf::Sprite &s_quest_obj){
+              sf::Sprite &s_quest_obj) {
     for (int i = 0; i < map_height; i++)
         for (int j = 0; j < map_weight; j++) {
             if (get_map()[i][j] == '0') {
@@ -34,16 +35,14 @@ void draw_map(sf::RenderWindow &window, sf::Sprite &s_map, sf::Sprite &s_coffee,
                 s_map.setPosition(
                         (float) (j * 32), (float) (i * 32));
                 window.draw(s_map);
-            }
-            else if (get_map()[i][j] == '1') {
+            } else if (get_map()[i][j] == '1') {
                 s_map.setTextureRect(sf::IntRect(
                         384, 0, 32, 32));
                 s_map.setPosition(
                         (float) (j * 32), (float) (i * 32));
                 window.draw(s_map);
 
-            }
-            else if (get_map()[i][j] == 'c') {
+            } else if (get_map()[i][j] == 'c') {
                 s_map.setTextureRect(sf::IntRect(
                         461, 320, 32,
                         32));
@@ -54,7 +53,7 @@ void draw_map(sf::RenderWindow &window, sf::Sprite &s_map, sf::Sprite &s_coffee,
                 window.draw(s_map);
                 window.draw(s_coffee);
 
-            } else if (get_map()[i][j] == 'o'){
+            } else if (get_map()[i][j] == 'o') {
                 s_map.setTextureRect(sf::IntRect(
                         461, 320, 32,
                         32));
@@ -65,7 +64,7 @@ void draw_map(sf::RenderWindow &window, sf::Sprite &s_map, sf::Sprite &s_coffee,
                 window.draw(s_map);
                 window.draw(s_quest_obj);
 
-            } else if (get_map()[i][j] == 'n'){
+            } else if (get_map()[i][j] == 'n') {
                 s_npc.setPosition((float) (j * 32), (float) (i * 32));
                 s_map.setPosition(
                         (float) (j * 32), (float) (i * 32));
@@ -76,7 +75,7 @@ void draw_map(sf::RenderWindow &window, sf::Sprite &s_map, sf::Sprite &s_coffee,
         }
 }
 
-void draw_inf_about_quest(game::players &player, sf::Text &text){
+void draw_inf_about_quest(game::players &player, sf::Text &text) {
     text.setPosition(player.m_x - 210, player.m_y - 240);
 }
 
@@ -84,6 +83,8 @@ void draw_inf_about_quest(game::players &player, sf::Text &text){
 int main() {
     init_map();
     create_map();
+
+    game::asset_manager assets{};
 
     sf::RenderWindow window(sf::VideoMode(1280, 720), "Game");
     game::view.reset(sf::FloatRect(0, 0, 640, 480));
@@ -101,64 +102,35 @@ int main() {
     first_npc.set_coordinates(set_x_f - 2, 2);
 
 
-    sf::Image map_img;
-    map_img.loadFromFile("../images/new_map.png");
-    sf::Texture map;
-    map.loadFromImage(map_img);
     sf::Sprite s_map;
-    s_map.setTexture(map);
+    s_map.setTexture(assets.get_texture("new_map.png"));
 
-    sf::Image coffee_img;
-    coffee_img.loadFromFile("../images/coffee.png");
-    sf::Texture coffee;
-    coffee.loadFromImage(coffee_img);
     sf::Sprite s_coffee;
-    s_coffee.setTexture(coffee);
+    s_coffee.setTexture(assets.get_texture("coffee.png"));
 
-    sf::Image book_img;
-    book_img.loadFromFile("../images/books.png");
-    sf::Texture book;
-    book.loadFromImage(book_img);
     sf::Sprite s_book;
-    s_book.setTexture(book);
+    s_book.setTexture(assets.get_texture("books.png"));
 
-    sf::Font font;
-    font.loadFromFile("../fonts/YanoneKaffeesatz-VariableFont_wght.ttf");
-    sf::Text text("", font, 30);
+    sf::Text text("", assets.get_font("YanoneKaffeesatz-VariableFont_wght.ttf"), 30);
     text.setFillColor(sf::Color::Red);
     text.setStyle(sf::Text::Bold);
-    text.setString( L"Квеста нет");
+    text.setString(L"Квеста нет");
 
 
-    sf::Image main_d_img;
-    main_d_img.loadFromFile("../images/dialog_main.png");
-    sf::Texture main_d_text;
-    main_d_text.loadFromImage(main_d_img);
-//    sf::Sprite main_d_s; // Уберу это после
-//    main_d_s.setTexture(main_d_text);
-
-
-    sf::Image buttom1;
-    buttom1.loadFromFile("../images/buttom_1.png");
-    sf::Texture buttom1_t;
-    buttom1_t.loadFromImage(buttom1);
-    sf::Image buttom2;
-    buttom2.loadFromFile("../images/buttom2.png");
-    sf::Texture buttom2_t;
-    buttom2_t.loadFromImage(buttom2);
-
-    game::dialog d(-100, 140, main_d_text, &window, buttom1_t, buttom2_t, font);
+    game::dialog d(-100, 140, assets.get_texture("dialog_main.png"), &window,
+                   assets.get_texture("buttom_1.png"), assets.get_texture("buttom2.png"),
+                   assets.get_font("YanoneKaffeesatz-VariableFont_wght.ttf"));
 
     while (window.isOpen()) {
 
-        float time = clock.getElapsedTime().asMicroseconds();
+        float time = clock.getElapsedTime().asSeconds();
         coffee_time = (int) bonus_clock.getElapsedTime().asSeconds();
         float buttom_time = clock.getElapsedTime().asSeconds();
         //window.setVerticalSyncEnabled(true);
         //window.setFramerateLimit(120);
 
-        clock.restart();
-        time = time / 800;
+        time = clock.restart().asSeconds();
+        //time = time / 800;
 
         sf::Event event{};
         while (window.pollEvent(event)) {

@@ -9,7 +9,7 @@ add_executable(TEST_SFML
         src/characters.cpp
         src/map_generator.cpp
         src/animation.cpp
-        include/animation.hpp include/quest.hpp src/Button.cpp src/Button.hpp)
+        include/animation.hpp include/quest.hpp src/Button.cpp include/Button.hpp src/asset_manager.cpp include/asset_manager.hpp)
 
 set(SFML_STATIC_LIBRARIES TRUE)
 set(SFML_DIR C:/SFML-2.5.1/lib/cmake/SFML)

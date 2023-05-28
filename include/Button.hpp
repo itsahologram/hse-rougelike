@@ -47,7 +47,6 @@ namespace game {
         dialog(float x, float y, sf::Texture& dialog_window, sf::RenderWindow *wind,
                const sf::Texture& normal,
                const sf::Texture& clicked, sf::Font& font);
-        bool is_draw = false;
 
         void draw(){
             if (is_draw){
@@ -92,6 +91,7 @@ namespace game {
 
         sf::RenderWindow *window;
 
+        bool is_draw = true;
         sf::Sprite dial;
         std::vector<sf::String> main_text = {L"text1", L"text2", L"text3"};
         std::vector<sf::String> but_1 = {L"but11", L"but12", L"but13"};

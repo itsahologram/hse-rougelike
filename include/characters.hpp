@@ -47,7 +47,7 @@ namespace game {
 
         float m_acceleration_x = 0, m_acceleration_y = 0;
 
-        double m_speed = 0.15;
+        double m_speed = 200;
         int m_last_coffee_time = -5;
 
         bool is_quest = false;
