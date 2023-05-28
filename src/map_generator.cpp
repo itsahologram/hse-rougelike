@@ -143,14 +143,65 @@ void game::npc::set_coordinates(int new_x, int new_y) {
     m_y = new_y;
 }
 
-void add_quest_obj(int count){
+void add_quest_obj(int count) {
     int count_obj = 0;
-    while (count_obj < count){
+    while (count_obj < count) {
         auto new_x = rand_x(generator);
         auto new_y = rand_y(generator);
-        if (get_map()[new_y][new_x] == '0'){
+        if (get_map()[new_y][new_x] == '0') {
             get_map()[new_y][new_x] = 'o';
             count_obj++;
         }
     }
+}
+
+void draw_map(sf::RenderWindow &window, sf::Sprite &s_map, sf::Sprite &s_coffee, sf::Sprite &s_npc,
+              sf::Sprite &s_quest_obj) {
+    for (int i = 0; i < map_height; i++)
+        for (int j = 0; j < map_weight; j++) {
+            if (get_map()[i][j] == '0') {
+                s_map.setTextureRect(sf::IntRect(
+                        461, 320, 32,
+                        32));
+                s_map.setPosition(
+                        (float) (j * 32), (float) (i * 32));
+                window.draw(s_map);
+            } else if (get_map()[i][j] == '1') {
+                s_map.setTextureRect(sf::IntRect(
+                        384, 0, 32, 32));
+                s_map.setPosition(
+                        (float) (j * 32), (float) (i * 32));
+                window.draw(s_map);
+
+            } else if (get_map()[i][j] == 'c') {
+                s_map.setTextureRect(sf::IntRect(
+                        461, 320, 32,
+                        32));
+                s_map.setPosition(
+                        (float) (j * 32), (float) (i * 32));
+                s_coffee.setTextureRect(sf::IntRect(0, 0, 16, 16));
+                s_coffee.setPosition((float) (j * 32), (float) (i * 32));
+                window.draw(s_map);
+                window.draw(s_coffee);
+
+            } else if (get_map()[i][j] == 'o') {
+                s_map.setTextureRect(sf::IntRect(
+                        461, 320, 32,
+                        32));
+                s_quest_obj.setTextureRect(sf::IntRect(1, 1, 32, 32));
+                s_quest_obj.setPosition((float) (j * 32), (float) (i * 32));
+                s_map.setPosition(
+                        (float) (j * 32), (float) (i * 32));
+                window.draw(s_map);
+                window.draw(s_quest_obj);
+
+            } else if (get_map()[i][j] == 'n') {
+                s_npc.setPosition((float) (j * 32), (float) (i * 32));
+                s_map.setPosition(
+                        (float) (j * 32), (float) (i * 32));
+                window.draw(s_map);
+                window.draw(s_npc);
+            }
+
+        }
 }

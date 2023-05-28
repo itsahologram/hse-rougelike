@@ -33,4 +33,7 @@ void create_room(int x, int y, int x_f, int y_f);
 void create_map();
 void add_quest_obj(int count);
 
+void draw_map(sf::RenderWindow &window, sf::Sprite &s_map, sf::Sprite &s_coffee, sf::Sprite &s_npc,
+              sf::Sprite &s_quest_obj);
+
 #endif // TEST_SFML_MAP_GENERATOR_HPP

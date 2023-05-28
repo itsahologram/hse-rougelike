@@ -1,7 +1,7 @@
 #include "characters.hpp"
 
 namespace game {
-    void players::update(float time, int coffee_timer, sf::Text &text) {
+    void players::update(float time, float coffee_timer, sf::Text &text) {
         switch (m_direction) {
             case RIGHT:
                 m_acceleration_x = m_speed;
@@ -34,7 +34,7 @@ namespace game {
         m_sprite.setPosition((float) m_x, (float) m_y);
     }
 
-    void players::interaction_with_map(int coffee_timer, sf::Text &text) {
+    void players::interaction_with_map(float coffee_timer, sf::Text &text) {
         for (int i = (int) (m_y / 32); i < (m_y + m_high) / 32; i++) {
             for (int j = (int) (m_x / 32); j < ((m_x + m_width) / 32); j++) {
                 if (get_map()[i][j] == '1') {
@@ -51,13 +51,12 @@ namespace game {
                         m_x = j * 32 + 32;
                     }
                 } else if (get_map()[i][j] == 'c') {
-                    m_speed *= 2;
+                    m_speed = std::min(m_speed * 2, 500.0);
                     get_map()[i][j] = '0';
                     m_last_coffee_time = coffee_timer;
                 } else if (get_map()[i][j] == 'n') {
                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::E) &&
                             (m_current_quest->m_status == NONE || m_current_quest->m_status == COMPLETE)) {
-                        std::cout << 124 << "\n";
                         m_current_quest = new quest_find_some_obj(L"Новый квест", 1);
                         m_current_quest->update_status(true, false);
                         add_quest_obj(1);
@@ -78,5 +77,9 @@ namespace game {
                 }
             }
         }
+    }
+
+    void characters::set_direction(directions dir) {
+        m_direction = dir;
     }
 } // namespace game
