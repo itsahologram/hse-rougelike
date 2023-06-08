@@ -1,7 +1,37 @@
 #include "characters.hpp"
 
+void update_text(sf::Text &header_quest, sf::Text &details_quest, game::quest &current_quest, int complete_quest, int all_quest){
+    if (complete_quest == all_quest){
+        header_quest.setString(L"Ты выполнил все квесты!");
+        details_quest.setString("");
+        return;
+    }
+    if (current_quest.m_status == game::NONE) {
+            header_quest.setString(L"Нет активного квеста");
+            details_quest.setString("");
+        }
+    if (current_quest.m_status == game::IN_PROGRESS) {
+            header_quest.setString(
+                    sf::String::fromUtf8(current_quest.m_header_text.begin(), current_quest.m_header_text.end()));
+            details_quest.setString(
+                    sf::String::fromUtf8(current_quest.m_details_quest.begin(), current_quest.m_details_quest.end())+current_quest.m_quest_progress);
+        }
+    if (current_quest.m_status == game::COMPLETE_BUT_NOT_TELL) {
+            details_quest.setString(L"Вернись и расскажи о своём успехе");
+
+        }
+    if (current_quest.m_status == game::COMPLETE){
+            header_quest.setString(L"Ты выполнил квест!");
+            details_quest.setString("");
+
+        }
+    }
+
+
 namespace game {
-    void players::update(float time, float coffee_timer, sf::Text &text) {
+    void players::update(float time, float coffee_timer, asset_manager &assets,
+                         sf::Text &header_quest, sf::Text &details_quest, sf::Event &event,
+                         dialog &dial) {
         switch (m_direction) {
             case RIGHT:
                 m_acceleration_x = m_speed;
@@ -29,12 +59,13 @@ namespace game {
         m_x += m_acceleration_x * time;
         m_y += m_acceleration_y * time;
 
-        interaction_with_map(coffee_timer, text);
-        text.setString(m_current_quest->m_name_of_quest);
+        interaction_with_map(coffee_timer, assets, event, dial);
+        update_text(header_quest, details_quest, *m_current_quest, m_num_complete_quests, assets.get_num_quests());
         m_sprite.setPosition((float) m_x, (float) m_y);
     }
 
-    void players::interaction_with_map(float coffee_timer, sf::Text &text) {
+    void players::interaction_with_map(float coffee_timer, asset_manager &assets, sf::Event &event,
+                                       dialog &dial) {
         for (int i = (int) (m_y / 32); i < (m_y + m_high) / 32; i++) {
             for (int j = (int) (m_x / 32); j < ((m_x + m_width) / 32); j++) {
                 if (get_map()[i][j] == '1') {
@@ -56,23 +87,23 @@ namespace game {
                     m_last_coffee_time = coffee_timer;
                 } else if (get_map()[i][j] == 'n') {
                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::E) &&
-                            (m_current_quest->m_status == NONE || m_current_quest->m_status == COMPLETE)) {
-                        m_current_quest = new quest_find_some_obj(L"Новый квест", 1);
-                        m_current_quest->update_status(true, false);
-                        add_quest_obj(1);
+                            (m_current_quest->m_status == NONE || m_current_quest->m_status == COMPLETE) &&
+                            m_num_complete_quests < assets.get_num_quests()) {
+                        m_current_quest = &assets.get_random_quest();
+                        m_current_quest->m_status = IN_PROGRESS;
+                        m_current_quest->quest_was_started(dial);
+                        is_quest = true;
                     }
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::F) && m_current_quest->m_status == IN_PROGRESS) {
-                        m_current_quest->update_status(false, true);
-                        m_current_quest->m_name_of_quest = L"Квест сдан";
+                    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F)  && m_current_quest->m_status == COMPLETE_BUT_NOT_TELL) {
+                          m_current_quest->m_status = COMPLETE;
+                          m_num_complete_quests++;
+                          std::cout << m_num_complete_quests << "\n";
 
                     }
                 } else if (get_map()[i][j] == 'o') {
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::E) && m_current_quest->m_status == START) {
-                        if (auto *q = dynamic_cast<quest_find_some_obj *>(m_current_quest)) {
-                            q->m_current_count_of_obj++;
-                        }
-                        m_current_quest->update_status(false, false);
-                        get_map()[i][j] = '0';
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)  && m_current_quest->m_status == IN_PROGRESS) {
+                        m_current_quest->middle_update();
+                          get_map()[i][j] = '0';
                     }
                 }
             }

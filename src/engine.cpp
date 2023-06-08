@@ -2,8 +2,9 @@
 
 namespace game {
 
-    void draw_inf_about_quest(game::players &player, sf::Text &text){
-        text.setPosition(player.m_x - 210, player.m_y - 240);
+    void draw_inf_about_quest(game::players &player, sf::Text &headet_text, sf::Text &details_quest) {
+        headet_text.setPosition(player.m_x - 210, player.m_y - 240);
+        details_quest.setPosition(player.m_x - 210, player.m_y - 200);
     }
 
 
@@ -20,17 +21,35 @@ namespace game {
         m_details_quest.setFillColor(sf::Color::Red);
         m_header_quest.setStyle(sf::Text::Bold);
         m_details_quest.setStyle(sf::Text::Bold);
+
+        assets.parse_quests_from_json("quests.json");
     };
 
 
-    void engine::input() {
-        sf::Event event{};
+    void engine::input(sf::Event &event) {
 
         while (m_window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
                 m_window.close();
             }
+            if (m_dialog.get_is_draw() && player_1.get_inf_about_current_quest()) {
+                if (event.type == sf::Event::MouseButtonPressed) {
+                    if (event.mouseButton.button == sf::Mouse::Left) {
+                        sf::Vector2i pixelPos = sf::Mouse::getPosition(m_window);
+                        sf::Vector2f pos = m_window.mapPixelToCoords(pixelPos);
+                        if (player_1.get_quest().middle_update(pos)){
+                            player_1.m_num_complete_quests++;
+                        }
+                    }
+                }
+                if (event.type == sf::Event::MouseButtonReleased) {
+                    if (event.mouseButton.button == sf::Mouse::Left) {
+                        m_dialog.reset_button();
+                    }
+                }
+            }
         }
+
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
             player_1.set_direction(LEFT);
@@ -44,23 +63,13 @@ namespace game {
             player_1.set_direction(STOP);
         }
 
-        if (event.type == sf::Event::MouseButtonPressed) {
-            if (event.mouseButton.button == sf::Mouse::Left) {
-                sf::Vector2i pixelPos = sf::Mouse::getPosition(m_window);
-                sf::Vector2f pos = m_window.mapPixelToCoords(pixelPos);
-                m_dialog.check_click(pos);
-            }
-        }
-        if (event.type == sf::Event::MouseButtonReleased) {
-            if (event.mouseButton.button == sf::Mouse::Left) {
-                m_dialog.reset_b();
-            }
-        }
+
         zoom_view(view);
     }
 
-    void engine::update(float delta_time, float coffee_time) {
-        player_1.update(delta_time, coffee_time, m_header_quest);
+    void engine::update(float delta_time, float coffee_time, sf::Event &event) {
+        player_1.update(delta_time, coffee_time, assets,
+                        m_header_quest, m_details_quest, event, m_dialog);
 
         camera_follow_the_player(view, player_1.get_x(), player_1.get_y());
         m_window.setView(view);
@@ -68,12 +77,13 @@ namespace game {
         m_dialog.set_posision(player_1.get_x() - 150, player_1.get_y() + 70);
     }
 
-    void engine::draw(sf::Sprite &s_map, sf::Sprite &s_coffee, sf::Sprite &s_quest_obj){
+    void engine::draw(sf::Sprite &s_map, sf::Sprite &s_coffee, sf::Sprite &s_quest_obj) {
         m_window.clear(m_window_color);
         draw_map(m_window, s_map, s_coffee, first_nps.m_sprite, s_quest_obj);
         m_window.draw(player_1.m_sprite);
-        draw_inf_about_quest(player_1, m_header_quest);
+        draw_inf_about_quest(player_1, m_header_quest, m_details_quest);
         m_window.draw(m_header_quest);
+        m_window.draw(m_details_quest);
 
         m_dialog.draw();
         m_window.display();
@@ -91,13 +101,15 @@ namespace game {
         sf::Sprite s_book;
         s_book.setTexture(assets.get_texture("books.png"));
 
-        while (m_window.isOpen()){
+        while (m_window.isOpen()) {
+            sf::Event event{};
             float time = clock.getElapsedTime().asSeconds();
             float coffee_time = coffee_clock.getElapsedTime().asSeconds();
             time = clock.restart().asSeconds();
 
-            input();
-            update(time, coffee_time);
+
+            input(event);
+            update(time, coffee_time, event);
             draw(s_map, s_coffee, s_book);
         }
     }

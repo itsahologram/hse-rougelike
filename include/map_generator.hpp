@@ -7,7 +7,6 @@
 #include <random>
 #include <string>
 #include <vector>
-#include "characters.hpp"
 
 std::vector<std::vector<char>> &get_map();
 

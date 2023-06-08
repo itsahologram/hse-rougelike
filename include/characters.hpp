@@ -5,6 +5,7 @@
 #include "quest.hpp"
 #include <SFML/Graphics.hpp>
 #include <string>
+#include <asset_manager.hpp>
 #include <utility>
 
 
@@ -51,33 +52,32 @@ namespace game {
         float m_last_coffee_time = -5;
 
         bool is_quest = false;
-        bool is_obj = false;
         bool is_complete = false;
 
-        abstract_quest* m_current_quest = new quest_find_some_obj();
+
+        quest* m_current_quest = new quest();
 
 
 
     public:
+        int m_num_complete_quests = 0;
         bool get_inf_about_current_quest() const{
             return is_quest;
         }
-        bool get_about_complete() const {
-            return is_complete;
-        }
-        bool get_about_obj() const {
-            return is_obj;
+
+        quest &get_quest(){
+            return *m_current_quest;
         }
 
 
-        void update(float time, float coffee_timer, sf::Text &text);
+        void update(float time, float coffee_timer, asset_manager &assets, sf::Text &header_quest,
+                    sf::Text &details_quest, sf::Event &event, dialog &dial);
 
-        void interaction_with_map(float coffee_timer, sf::Text &text);
+        void interaction_with_map(float coffee_timer, asset_manager &assets, sf::Event &event,
+                                  dialog &dial);
 
         players(sf::Texture& texture, float x, float y,
-                int width, int high) : characters(texture, x, y, width, high) {
-            m_current_quest = new quest_find_some_obj();
-        };
+                int width, int high) : characters(texture, x, y, width, high) {};
 
         void animation(game::directions dir, float time, double &current_frame);
     };
