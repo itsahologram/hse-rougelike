@@ -32,7 +32,7 @@ namespace game {
 
         void set_direction(game::directions new_dir);
 
-        characters(sf::Texture& texture, float x, float y,
+        characters(sf::Texture &texture, float x, float y,
                    int width, int high) : m_x(x), m_y(y),
                                           m_width(width), m_high(high) {
 
@@ -48,24 +48,23 @@ namespace game {
 
         float m_acceleration_x = 0, m_acceleration_y = 0;
 
-        double m_speed = 200;
+        double m_speed = 240;
         float m_last_coffee_time = -5;
 
-        bool is_quest = false;
-        bool is_complete = false;
 
-
-        quest* m_current_quest = new quest();
-
+        quest *m_current_quest = new quest();
 
 
     public:
         int m_num_complete_quests = 0;
-        bool get_inf_about_current_quest() const{
+        bool is_quest = false;
+
+
+        bool get_inf_about_current_quest() const {
             return is_quest;
         }
 
-        quest &get_quest(){
+        quest &get_quest() {
             return *m_current_quest;
         }
 
@@ -76,16 +75,16 @@ namespace game {
         void interaction_with_map(float coffee_timer, asset_manager &assets, sf::Event &event,
                                   dialog &dial);
 
-        players(sf::Texture& texture, float x, float y,
+        players(sf::Texture &texture, float x, float y,
                 int width, int high) : characters(texture, x, y, width, high) {};
 
         void animation(game::directions dir, float time, double &current_frame);
     };
 
-    class npc: public characters {
+    class npc : public characters {
     public:
-        npc(sf::Texture& texture, float x, float y,
-            int width, int high): characters(texture, x, y, width, high) {};
+        npc(sf::Texture &texture, float x, float y,
+            int width, int high) : characters(texture, x, y, width, high) {};
 
         void set_coordinates(int new_x, int new_y);
     };

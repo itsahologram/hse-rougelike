@@ -20,7 +20,7 @@ bool game::quest::middle_update(sf::Vector2f &mousePos) {
     } else if (m_type == "quiz") {
         auto &current_quest = std::get<quiz_quest>(m_content);
         current_quest.player_answered(*m_dialog, mousePos);
-        if (current_quest.m_answered > current_quest.m_questions.size() && m_status != COMPLETE){
+        if (current_quest.m_answered > current_quest.m_questions.size() && m_status != COMPLETE) {
             m_status = COMPLETE;
             return true;
         }
@@ -68,8 +68,7 @@ void game::quiz_quest::player_answered(game::dialog &dialog, sf::Vector2f &mouse
     if (m_answered == -1) {
         m_answered++;
         set_current_ans(dialog);
-    }
-    else if (m_answered < m_questions.size()) {
+    } else if (m_answered < m_questions.size()) {
         if (ans == 1) {
             if (m_questions[m_answered].m_num_correct_answer == 1) {
                 m_answered_correctly++;
@@ -94,7 +93,7 @@ void game::quiz_quest::player_answered(game::dialog &dialog, sf::Vector2f &mouse
 
 
 void game::quiz_quest::set_current_ans(game::dialog &dialog) {
-    if (m_answered == m_questions.size()){
+    if (m_answered == m_questions.size()) {
         dialog.set_text("Ты ответил правильно на " + std::to_string(m_answered_correctly)
                         + "/" + std::to_string(m_questions.size()), "Далее", "Далее", "Далее");
         m_answered++;

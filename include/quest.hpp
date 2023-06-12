@@ -64,6 +64,7 @@ namespace game {
         quest() = default;
 
         bool middle_update(sf::Vector2f &mousePos);
+
         void middle_update();
 
 

@@ -29,7 +29,7 @@ namespace game {
         }
     }
 
-    void from_json(const nlohmann::json& j, question& question){
+    void from_json(const nlohmann::json &j, question &question) {
         j.at("text").get_to(question.m_text);
         j.at("answers").get_to(question.m_answers);
         j.at("correct_answer").get_to(question.m_num_correct_answer);
@@ -55,7 +55,7 @@ namespace game {
                 m_all_quests[i].m_content = content;
             } else if (m_all_quests[i].m_type == "quiz") {
                 quiz_quest content{};
-                for (auto & it : j["all"][i]["content"]){
+                for (auto &it: j["all"][i]["content"]) {
                     content.add_question(it.get<question>());
                 }
                 m_all_quests[i].m_content = content;

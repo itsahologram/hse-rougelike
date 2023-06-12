@@ -15,11 +15,13 @@ namespace game {
     public:
         explicit asset_manager() = default;
 
-        sf::Texture& get_texture(std::string const& filename);
-        sf::Font& get_font(std::string const& filename);
+        sf::Texture &get_texture(std::string const &filename);
 
-        void parse_quests_from_json(const std::string& filename);
-        quest& get_random_quest();
+        sf::Font &get_font(std::string const &filename);
+
+        void parse_quests_from_json(const std::string &filename);
+
+        quest &get_random_quest();
 
         int get_num_quests();
 

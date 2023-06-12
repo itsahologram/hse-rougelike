@@ -1,31 +1,33 @@
 #include "characters.hpp"
 
-void update_text(sf::Text &header_quest, sf::Text &details_quest, game::quest &current_quest, int complete_quest, int all_quest){
-    if (complete_quest == all_quest){
+void update_text(sf::Text &header_quest, sf::Text &details_quest, game::quest &current_quest, int complete_quest,
+                 int all_quest) {
+    if (complete_quest == all_quest) {
         header_quest.setString(L"Ты выполнил все квесты!");
         details_quest.setString("");
         return;
     }
     if (current_quest.m_status == game::NONE) {
-            header_quest.setString(L"Нет активного квеста");
-            details_quest.setString("");
-        }
-    if (current_quest.m_status == game::IN_PROGRESS) {
-            header_quest.setString(
-                    sf::String::fromUtf8(current_quest.m_header_text.begin(), current_quest.m_header_text.end()));
-            details_quest.setString(
-                    sf::String::fromUtf8(current_quest.m_details_quest.begin(), current_quest.m_details_quest.end())+current_quest.m_quest_progress);
-        }
-    if (current_quest.m_status == game::COMPLETE_BUT_NOT_TELL) {
-            details_quest.setString(L"Вернись и расскажи о своём успехе");
-
-        }
-    if (current_quest.m_status == game::COMPLETE){
-            header_quest.setString(L"Ты выполнил квест!");
-            details_quest.setString("");
-
-        }
+        header_quest.setString(L"Нет активного квеста");
+        details_quest.setString("");
     }
+    if (current_quest.m_status == game::IN_PROGRESS) {
+        header_quest.setString(
+                sf::String::fromUtf8(current_quest.m_header_text.begin(), current_quest.m_header_text.end()));
+        details_quest.setString(
+                sf::String::fromUtf8(current_quest.m_details_quest.begin(), current_quest.m_details_quest.end()) +
+                current_quest.m_quest_progress);
+    }
+    if (current_quest.m_status == game::COMPLETE_BUT_NOT_TELL) {
+        details_quest.setString(L"Вернись и расскажи о своём успехе");
+
+    }
+    if (current_quest.m_status == game::COMPLETE) {
+        header_quest.setString(L"Ты выполнил квест!");
+        details_quest.setString("");
+
+    }
+}
 
 
 namespace game {
@@ -85,26 +87,6 @@ namespace game {
                     m_speed = std::min(m_speed * 2, 500.0);
                     get_map()[i][j] = '0';
                     m_last_coffee_time = coffee_timer;
-                } else if (get_map()[i][j] == 'n') {
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::E) &&
-                            (m_current_quest->m_status == NONE || m_current_quest->m_status == COMPLETE) &&
-                            m_num_complete_quests < assets.get_num_quests()) {
-                        m_current_quest = &assets.get_random_quest();
-                        m_current_quest->m_status = IN_PROGRESS;
-                        m_current_quest->quest_was_started(dial);
-                        is_quest = true;
-                    }
-                    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F)  && m_current_quest->m_status == COMPLETE_BUT_NOT_TELL) {
-                          m_current_quest->m_status = COMPLETE;
-                          m_num_complete_quests++;
-                          std::cout << m_num_complete_quests << "\n";
-
-                    }
-                } else if (get_map()[i][j] == 'o') {
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)  && m_current_quest->m_status == IN_PROGRESS) {
-                        m_current_quest->middle_update();
-                          get_map()[i][j] = '0';
-                    }
                 }
             }
         }

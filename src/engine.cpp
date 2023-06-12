@@ -32,12 +32,13 @@ namespace game {
             if (event.type == sf::Event::Closed) {
                 m_window.close();
             }
+
             if (m_dialog.get_is_draw() && player_1.get_inf_about_current_quest()) {
                 if (event.type == sf::Event::MouseButtonPressed) {
                     if (event.mouseButton.button == sf::Mouse::Left) {
                         sf::Vector2i pixelPos = sf::Mouse::getPosition(m_window);
                         sf::Vector2f pos = m_window.mapPixelToCoords(pixelPos);
-                        if (player_1.get_quest().middle_update(pos)){
+                        if (player_1.get_quest().middle_update(pos)) {
                             player_1.m_num_complete_quests++;
                         }
                     }
@@ -45,6 +46,28 @@ namespace game {
                 if (event.type == sf::Event::MouseButtonReleased) {
                     if (event.mouseButton.button == sf::Mouse::Left) {
                         m_dialog.reset_button();
+                    }
+                }
+            }
+
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::E) {
+                for (int i = (int) (player_1.m_y / 32); i < (player_1.m_y + player_1.m_high) / 32; i++) {
+                    for (int j = (int) (player_1.m_x / 32); j < ((player_1.m_x + player_1.m_width) / 32); j++) {
+                        if (get_map()[i][j] == 'n') {
+                            if ((player_1.get_quest().m_status == NONE || player_1.get_quest().m_status == COMPLETE) &&
+                                player_1.m_num_complete_quests < assets.get_num_quests()) {
+                                player_1.get_quest() = assets.get_random_quest();
+                                player_1.get_quest().m_status = IN_PROGRESS;
+                                player_1.get_quest().quest_was_started(m_dialog);
+                                player_1.is_quest = true;
+                            } else if (player_1.get_quest().m_status == COMPLETE_BUT_NOT_TELL) {
+                                player_1.get_quest().m_status = COMPLETE;
+                                player_1.m_num_complete_quests++;
+                            }
+                        } else if (get_map()[i][j] == 'o' && player_1.get_quest().m_status == IN_PROGRESS) {
+                            player_1.get_quest().middle_update();
+                            get_map()[i][j] = '0';
+                        }
                     }
                 }
             }

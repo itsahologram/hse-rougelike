@@ -8,7 +8,6 @@ namespace game {
 
     void zoom_view(sf::View &view);
 
-
 }
 
 #endif //TEST_SFML_VIEW_HPP

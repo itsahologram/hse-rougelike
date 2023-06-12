@@ -27,12 +27,15 @@ namespace game {
         npc first_nps;
 
         void input(sf::Event &event);
+
         void update(float delta_time, float coffee_time, sf::Event &event);
+
         void draw(sf::Sprite &s_map, sf::Sprite &s_coffee, sf::Sprite &s_quest_obj);
 
     public:
 
         engine();
+
         void run();
 
     };
