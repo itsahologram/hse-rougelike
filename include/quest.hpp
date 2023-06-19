@@ -63,12 +63,15 @@ namespace game {
 
         quest() = default;
 
-        bool middle_update(sf::Vector2f &mousePos);
+        bool middle_update(sf::Vector2f mouse_pose);
 
-        void middle_update();
+        void quest_start_window(dialog &dial);
 
+        void finish_window();
 
-        void quest_was_started(dialog &dial);
+        void confirm_quest(sf::Vector2f mouse_pose);
+
+        void quest_was_started();
 
     };
 }

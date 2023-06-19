@@ -30,7 +30,7 @@ namespace game {
 
         void set_posision(float x, float y) {
             current_sprite->setPosition(x, y);
-            m_text.setPosition(x, y);
+            m_text.setPosition(x+5, y+5);
         }
 
     private:
@@ -44,6 +44,8 @@ namespace game {
 
         void set_state(bool state);
     };
+
+    enum dialog_mode {DIALOG, CONFIRM_WINDOW, QUIZ, NOT_DRAW};
 
     class dialog {
     public:
@@ -59,14 +61,16 @@ namespace game {
 
         void set_posision(float x, float y);
 
-        void set_text(const std::string &main_text, const std::string &fist_text,
-                      const std::string &second_text, const std::string &third_text);
+        void set_text(const std::string &main_text, const std::string &fist_text = "",
+                      const std::string &second_text = "", const std::string &third_text = "Продолжить");
 
-        void set_is_draw();
+        void set_mode(dialog_mode mode);
 
         void set_not_draw();
 
         bool get_is_draw();
+
+        dialog_mode get_mode();
 
     private:
         button *first_button;
@@ -77,9 +81,9 @@ namespace game {
 
         sf::RenderWindow *window;
 
-        bool is_draw_dialog = false;
         sf::Sprite m_sprite;
 
+        dialog_mode m_mode = NOT_DRAW;
 
     };
 }

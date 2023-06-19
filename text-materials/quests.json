@@ -2,30 +2,32 @@
   "num": 2,
   "all": [
     {
-      "header_text": "Ответы",
-      "details_quest": "Мне нужны ответы ",
+      "header_text": "Контрольная по матанализу",
+      "details_quest": "Ответьте на все вопросы",
 
-      "start_text": "Это вступительный текст",
-      "middle_text": "hurry up2",
-      "end_text": "well done!2",
+      "start_text": "Вам необходимо сдать контрольную по матанализу",
+      "middle_text": "Ответьте на вопросы, чтобы сдать контрольную",
+      "end_text": "Ваш результат:",
       "type": "quiz",
       "content": [
-        { "text":  "новый вопрос",
-          "answers":  ["ans1", "ans2", "ans3"],
+        { "text":  "К чему сходится натуральный ряд?",
+          "answers":  ["Не сходится", "К -1/12", "-45"],
           "correct_answer": 1
         },
-        { "text":  "второй вопрос",
-          "answers":  ["ans1", "ans2", "ans3"],
+        { "text":  "На каком отрезке сходится ∫1/n^2 ",
+          "answers":  ["[0, 1]","[1, +∞)", "Не сходится"],
           "correct_answer": 2
         }
       ]
     },
-    {  "header_text": "Поиск книг",
-      "details_quest": "Собрано ",  "start_text": "hello, take this lovely quest, you wont regret",
-      "middle_text": "hurry up",  "end_text": "well done!",
+    {  "header_text": "Поиск конспектов",
+      "details_quest": "Собрано ",
+      "start_text": "Помогите найти потерянные конспекты",
+      "middle_text": "hurry up",
+      "end_text": "Спасибо за помощь!",
       "type": "object_collection",
       "content": {
-      "num_items": 3,
+      "num_items": 1,
       "item_type": "book"
     }
     }

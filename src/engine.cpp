@@ -13,7 +13,7 @@ namespace game {
                                 assets.get_font("YanoneKaffeesatz-VariableFont_wght.ttf")),
                        m_header_quest("", assets.get_font("YanoneKaffeesatz-VariableFont_wght.ttf"), 30),
                        m_details_quest("", assets.get_font("YanoneKaffeesatz-VariableFont_wght.ttf"), 25),
-                       player_1(players(assets.get_texture("hero.png"), 64, 64, 32, 48)),
+                       player_1(players(assets.get_texture("player.png"), 64, 64, 50, 40)),
                        first_nps(assets.get_texture("npc2.png"), 1, 1, 32, 32) {
         init_map();
         create_map();
@@ -21,6 +21,7 @@ namespace game {
         m_details_quest.setFillColor(sf::Color::Red);
         m_header_quest.setStyle(sf::Text::Bold);
         m_details_quest.setStyle(sf::Text::Bold);
+
 
         assets.parse_quests_from_json("quests.json");
     };
@@ -33,7 +34,7 @@ namespace game {
                 m_window.close();
             }
 
-            if (m_dialog.get_is_draw() && player_1.get_inf_about_current_quest()) {
+            if (m_dialog.get_mode() == QUIZ || m_dialog.get_mode() == DIALOG) {
                 if (event.type == sf::Event::MouseButtonPressed) {
                     if (event.mouseButton.button == sf::Mouse::Left) {
                         sf::Vector2i pixelPos = sf::Mouse::getPosition(m_window);
@@ -50,22 +51,36 @@ namespace game {
                 }
             }
 
+            if (m_dialog.get_mode() == CONFIRM_WINDOW){
+                if (event.type == sf::Event::MouseButtonPressed) {
+                    if (event.mouseButton.button == sf::Mouse::Left) {
+                        sf::Vector2i pixel_pos = sf::Mouse::getPosition(m_window);
+                        sf::Vector2f pos = m_window.mapPixelToCoords(pixel_pos);
+                        player_1.get_quest().confirm_quest(pos);
+                    }
+                }
+                if (event.type == sf::Event::MouseButtonReleased) {
+                    if (event.mouseButton.button == sf::Mouse::Left) {
+                        m_dialog.reset_button();
+                    }
+                }
+            }
+
+
             if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::E) {
                 for (int i = (int) (player_1.m_y / 32); i < (player_1.m_y + player_1.m_high) / 32; i++) {
                     for (int j = (int) (player_1.m_x / 32); j < ((player_1.m_x + player_1.m_width) / 32); j++) {
                         if (get_map()[i][j] == 'n') {
                             if ((player_1.get_quest().m_status == NONE || player_1.get_quest().m_status == COMPLETE) &&
                                 player_1.m_num_complete_quests < assets.get_num_quests()) {
-                                player_1.get_quest() = assets.get_random_quest();
-                                player_1.get_quest().m_status = IN_PROGRESS;
-                                player_1.get_quest().quest_was_started(m_dialog);
-                                player_1.is_quest = true;
+                                auto* quest = &assets.get_random_quest();
+                                player_1.m_current_quest = quest;
+                                player_1.get_quest().quest_start_window(m_dialog);
                             } else if (player_1.get_quest().m_status == COMPLETE_BUT_NOT_TELL) {
-                                player_1.get_quest().m_status = COMPLETE;
-                                player_1.m_num_complete_quests++;
+                                player_1.get_quest().finish_window();
                             }
                         } else if (get_map()[i][j] == 'o' && player_1.get_quest().m_status == IN_PROGRESS) {
-                            player_1.get_quest().middle_update();
+                            player_1.get_quest().middle_update(sf::Vector2f(16.5f, 24.f));
                             get_map()[i][j] = '0';
                         }
                     }
@@ -103,6 +118,7 @@ namespace game {
     void engine::draw(sf::Sprite &s_map, sf::Sprite &s_coffee, sf::Sprite &s_quest_obj) {
         m_window.clear(m_window_color);
         draw_map(m_window, s_map, s_coffee, first_nps.m_sprite, s_quest_obj);
+        player_1.draw_direction();
         m_window.draw(player_1.m_sprite);
         draw_inf_about_quest(player_1, m_header_quest, m_details_quest);
         m_window.draw(m_header_quest);
@@ -123,10 +139,10 @@ namespace game {
 
         sf::Sprite s_book;
         s_book.setTexture(assets.get_texture("books.png"));
+        float time = clock.getElapsedTime().asSeconds();
 
         while (m_window.isOpen()) {
             sf::Event event{};
-            float time = clock.getElapsedTime().asSeconds();
             float coffee_time = coffee_clock.getElapsedTime().asSeconds();
             time = clock.restart().asSeconds();
 

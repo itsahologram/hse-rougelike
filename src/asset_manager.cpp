@@ -29,8 +29,24 @@ namespace game {
         }
     }
 
+    void cut_text(std::string &string, int max_lenth){
+        int last_space = -1;
+        int current_lenth = 0;
+        for (int i = 0; i < string.size(); i++){
+            current_lenth++;
+            if (string[i] == ' '){
+                last_space = i;
+            }
+            if (current_lenth >= max_lenth){
+                string[last_space]='\n';
+                current_lenth = 0;
+            }
+        }
+    }
+
     void from_json(const nlohmann::json &j, question &question) {
         j.at("text").get_to(question.m_text);
+        cut_text(question.m_text, 50);
         j.at("answers").get_to(question.m_answers);
         j.at("correct_answer").get_to(question.m_num_correct_answer);
     }
@@ -45,8 +61,11 @@ namespace game {
             m_all_quests[i].m_header_text = j["all"][i]["header_text"];
             m_all_quests[i].m_details_quest = j["all"][i]["details_quest"];
             m_all_quests[i].m_start_text = j["all"][i]["start_text"];
+            cut_text(m_all_quests[i].m_start_text, 50);
             m_all_quests[i].m_middle_text = j["all"][i]["middle_text"];
+            cut_text(m_all_quests[i].m_middle_text, 50);
             m_all_quests[i].m_end_text = j["all"][i]["end_text"];
+            cut_text(m_all_quests[i].m_middle_text, 50);
             m_all_quests[i].m_type = j["all"][i]["type"];
             if (m_all_quests[i].m_type == "object_collection") {
                 int num_items = j["all"][i]["content"]["num_items"];
@@ -73,7 +92,7 @@ namespace game {
             random_quest_index = get_random_quest_index(generator);
         }
 
-        return m_all_quests[random_quest_index];
+        return m_all_quests.at(random_quest_index);
     }
 
     int asset_manager::get_num_quests() {

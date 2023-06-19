@@ -27,3 +27,5 @@ target_link_libraries(TEST_SFML sfml-system sfml-window sfml-graphics sfml-audio
 set(nlohmann_json_DIR C:/msys64/mingw64/share/cmake/nlohmann_json)
 find_package(nlohmann_json 3.2.0 REQUIRED)
 include_directories(C:/msys64/mingw64/include)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static")

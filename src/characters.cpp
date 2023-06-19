@@ -55,41 +55,49 @@ namespace game {
                 m_acceleration_x = 0;
                 m_acceleration_y = 0;
         }
-        if (coffee_timer - m_last_coffee_time >= 15) {
-            m_speed = std::max(m_speed / 2, 200.0);
+        if (coffee_timer - m_last_coffee_time >= 60) {
+            m_speed = std::max(m_speed / 2, 250.0);
         }
         m_x += m_acceleration_x * time;
         m_y += m_acceleration_y * time;
 
-        interaction_with_map(coffee_timer, assets, event, dial);
+        interaction_with_map(coffee_timer);
         update_text(header_quest, details_quest, *m_current_quest, m_num_complete_quests, assets.get_num_quests());
         m_sprite.setPosition((float) m_x, (float) m_y);
     }
 
-    void players::interaction_with_map(float coffee_timer, asset_manager &assets, sf::Event &event,
-                                       dialog &dial) {
-        for (int i = (int) (m_y / 32); i < (m_y + m_high) / 32; i++) {
-            for (int j = (int) (m_x / 32); j < ((m_x + m_width) / 32); j++) {
+    void players::interaction_with_map(float coffee_timer) {
+        for (int i = (m_y / 32); i < ((m_y + m_high - 10) / 32); i++) {
+            for (int j = (m_x / 32); j < ((m_x + m_width - 10) / 32); j++) {
                 if (get_map()[i][j] == '1') {
                     if (m_acceleration_y > 0) {
-                        m_y = i * 32 - m_high;
+                        m_y = i * 32 - m_high + 10;
                     }
                     if (m_acceleration_y < 0) {
                         m_y = i * 32 + 32;
                     }
                     if (m_acceleration_x > 0) {
-                        m_x = j * 32 - m_width;
+                        m_x = j * 32 - m_width + 10;
                     }
                     if (m_acceleration_x < 0) {
                         m_x = j * 32 + 32;
                     }
                 } else if (get_map()[i][j] == 'c') {
-                    m_speed = std::min(m_speed * 2, 500.0);
+                    m_speed = std::min(m_speed * 2, 800.0);
                     get_map()[i][j] = '0';
                     m_last_coffee_time = coffee_timer;
                 }
             }
         }
+    }
+
+    void players::draw_direction() {
+        if (m_direction== LEFT){
+            m_sprite.setTextureRect(sf::IntRect(m_width, 0, -m_width, m_high));
+        } else if (m_direction == RIGHT){
+            m_sprite.setTextureRect(sf::IntRect(0, 0, m_width, m_high));
+        }
+
     }
 
     void characters::set_direction(directions dir) {
