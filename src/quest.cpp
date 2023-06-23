@@ -95,7 +95,7 @@ void game::quiz_quest::player_answered(game::dialog &dialog, sf::Vector2f &mouse
     if (m_answered == -1) {
         m_answered++;
         set_current_ans(dialog);
-    } else if (m_answered < m_questions.size()) {
+    } else if ((unsigned)m_answered < m_questions.size()) {
         if (ans == 1) {
             if (m_questions[m_answered].m_num_correct_answer == 1) {
                 m_answered_correctly++;
@@ -123,7 +123,7 @@ void game::quiz_quest::set_current_ans(game::dialog &dialog) {
     if (m_answered == -1){
         return;
     }
-    if (m_answered == m_questions.size()) {
+    if ((unsigned)m_answered == m_questions.size()) {
         m_answered++;
         return;
     }

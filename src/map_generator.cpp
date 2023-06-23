@@ -103,8 +103,8 @@ void create_coffee() {
 }
 
 void create_map() {
-    set_x_f = 1 + rand_w(generator);
-    set_y_f = 1 + rand_h(generator);
+    int set_x_f = 1 + rand_w(generator);
+    int set_y_f = 1 + rand_h(generator);
 
     create_room(1, 1, set_x_f, set_y_f);
 

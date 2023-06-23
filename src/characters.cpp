@@ -32,8 +32,7 @@ void update_text(sf::Text &header_quest, sf::Text &details_quest, game::quest &c
 
 namespace game {
     void players::update(float time, float coffee_timer, asset_manager &assets,
-                         sf::Text &header_quest, sf::Text &details_quest, sf::Event &event,
-                         dialog &dial) {
+                         sf::Text &header_quest, sf::Text &details_quest) {
         switch (m_direction) {
             case RIGHT:
                 m_acceleration_x = m_speed;

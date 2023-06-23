@@ -3,29 +3,31 @@ project(TEST_SFML)
 
 set(CMAKE_CXX_STANDARD 17)
 
-set(nlohmann_json_DIR C:/msys64/mingw64/share/cmake/nlohmann_json)
-find_package(nlohmann_json 3.2.0 REQUIRED)
+add_compile_options(-Wall)
+add_compile_options(-Wextra)
+add_compile_options(-Wno-expansion-to-defined)
+
+include(FetchContent)
+FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.11.2/json.tar.xz)
+FetchContent_MakeAvailable(json)
 
 
 include_directories(include)
-
 add_executable(TEST_SFML
         src/main.cpp
         src/characters.cpp
         src/map_generator.cpp
-        src/animation.cpp
-        include/animation.hpp include/quest.hpp src/button.cpp include/button.hpp src/asset_manager.cpp include/asset_manager.hpp src/engine.cpp include/engine.hpp src/view.cpp src/quest.cpp)
+        src/button.cpp
+        src/asset_manager.cpp
+        src/engine.cpp
+        src/view.cpp
+        src/quest.cpp
+        )
 
 set(SFML_STATIC_LIBRARIES TRUE)
-set(SFML_DIR C:/SFML-2.5.1/lib/cmake/SFML)
-set(SFML_INCLUDE_DIR C:/SFML-2.5.1/include/SFML)
-find_package(SFML COMPONENTS system window graphics audio network REQUIRED)
-include_directories(C:/SFML-2.5.1/include)
-target_link_libraries(TEST_SFML sfml-system sfml-window sfml-graphics sfml-audio sfml-network)
+find_package(SFML 2.5.1 COMPONENTS system window graphics network REQUIRED)
+include_directories(${SFML_INCLUDE_DIRS})
+target_link_libraries(TEST_SFML sfml-system sfml-window sfml-graphics sfml-network)
 
-
-set(nlohmann_json_DIR C:/msys64/mingw64/share/cmake/nlohmann_json)
 find_package(nlohmann_json 3.2.0 REQUIRED)
-include_directories(C:/msys64/mingw64/include)
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static")
+target_link_libraries(TEST_SFML nlohmann_json::nlohmann_json)

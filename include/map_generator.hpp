@@ -22,8 +22,6 @@ const int max_room_weight = 30;
 const int count_room = 60;
 const int count_coffee = 25;
 
-static int set_x_f = 0;
-static int set_y_f = 0;
 
 void init_map();
 

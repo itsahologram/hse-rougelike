@@ -40,8 +40,6 @@ namespace game {
             m_sprite.setTextureRect(sf::IntRect(0, 0, width, high));
         };
 
-        virtual void animation(game::directions dir, int time, double &current_frame) {};
-
     };
 
     class players : public characters {
@@ -66,14 +64,12 @@ namespace game {
 
 
         void update(float time, float coffee_timer, asset_manager &assets, sf::Text &header_quest,
-                    sf::Text &details_quest, sf::Event &event, dialog &dial);
+                    sf::Text &details_quest);
 
         void interaction_with_map(float coffee_timer);
 
         players(sf::Texture &texture, float x, float y,
                 int width, int high) : characters(texture, x, y, width, high) {};
-
-        void animation(game::directions dir, float time, double &current_frame);
 
         void draw_direction();
     };

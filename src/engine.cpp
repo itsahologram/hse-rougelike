@@ -105,9 +105,9 @@ namespace game {
         zoom_view(view);
     }
 
-    void engine::update(float delta_time, float coffee_time, sf::Event &event) {
+    void engine::update(float delta_time, float coffee_time) {
         player_1.update(delta_time, coffee_time, assets,
-                        m_header_quest, m_details_quest, event, m_dialog);
+                        m_header_quest, m_details_quest);
 
         camera_follow_the_player(view, player_1.get_x(), player_1.get_y());
         m_window.setView(view);
@@ -148,7 +148,7 @@ namespace game {
 
 
             input(event);
-            update(time, coffee_time, event);
+            update(time, coffee_time);
             draw(s_map, s_coffee, s_book);
         }
     }
