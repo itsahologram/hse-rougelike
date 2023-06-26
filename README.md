@@ -39,4 +39,8 @@
 ```
 ./hse-rougelike
 ```
-
+## Навигация по репозиторию:
+-  [sfml-network](https://github.com/itsahologram/hse-rougelike/tree/sfml_network) - в данной ветке велась работа с сетью
+- [sfml](https://github.com/itsahologram/hse-rougelike/tree/sfml) - работа с графикой и логикой игры
+- [qt](https://github.com/itsahologram/hse-rougelike/tree/qt) - первый прототип на QT (перемещение простого объекта по экрану)
+- [grpc](https://github.com/itsahologram/hse-rougelike/tree/grpc) - тестовая ветка 
