@@ -4,7 +4,6 @@
 #include "view.hpp"
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include <windows.h>
 #include "engine.hpp"
 #include "asset_manager.hpp"
 

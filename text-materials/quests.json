@@ -11,7 +11,7 @@
       "type": "quiz",
       "content": [
         { "text":  "К чему сходится натуральный ряд?",
-          "answers":  ["Не сходится", "К -1/12", "-45"],
+          "answers":  ["Не сходится", "К -1/12", "100242"],
           "correct_answer": 1
         },
         { "text":  "На каком отрезке сходится ∫1/n^2 ",
@@ -27,7 +27,7 @@
       "end_text": "Спасибо за помощь!",
       "type": "object_collection",
       "content": {
-      "num_items": 1,
+      "num_items": 2,
       "item_type": "book"
     }
     }

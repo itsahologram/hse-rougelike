@@ -40,7 +40,7 @@ namespace game {
                         sf::Vector2i pixelPos = sf::Mouse::getPosition(m_window);
                         sf::Vector2f pos = m_window.mapPixelToCoords(pixelPos);
                         if (player_1.get_quest().middle_update(pos)) {
-                            player_1.m_num_complete_quests++;
+                            player_1.m_num_complete_quests += 1;
                         }
                     }
                 }

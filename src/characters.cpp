@@ -3,7 +3,7 @@
 void update_text(sf::Text &header_quest, sf::Text &details_quest, game::quest &current_quest, int complete_quest,
                  int all_quest) {
     if (complete_quest == all_quest) {
-        header_quest.setString(L"Ты выполнил все квесты!");
+        header_quest.setString(L"Вы выполнили все квесты!");
         details_quest.setString("");
         return;
     }
@@ -19,11 +19,11 @@ void update_text(sf::Text &header_quest, sf::Text &details_quest, game::quest &c
                 current_quest.m_quest_progress);
     }
     if (current_quest.m_status == game::COMPLETE_BUT_NOT_TELL) {
-        details_quest.setString(L"Вернись и расскажи о своём успехе");
+        details_quest.setString(L"Вернитесь и расскажите о своём успехе");
 
     }
     if (current_quest.m_status == game::COMPLETE) {
-        header_quest.setString(L"Ты выполнил квест!");
+        header_quest.setString(L"Вы выполнили квест!");
         details_quest.setString("");
 
     }
@@ -66,17 +66,17 @@ namespace game {
     }
 
     void players::interaction_with_map(float coffee_timer) {
-        for (int i = (m_y / 32); i < ((m_y + m_high - 10) / 32); i++) {
-            for (int j = (m_x / 32); j < ((m_x + m_width - 10) / 32); j++) {
+        for (int i = (m_y / 32); i < ((m_y + m_high - 5) / 32); i++) {
+            for (int j = (m_x / 32); j < ((m_x + m_width - 15) / 32); j++) {
                 if (get_map()[i][j] == '1') {
                     if (m_acceleration_y > 0) {
-                        m_y = i * 32 - m_high + 10;
+                        m_y = i * 32 - m_high + 5;
                     }
                     if (m_acceleration_y < 0) {
                         m_y = i * 32 + 32;
                     }
                     if (m_acceleration_x > 0) {
-                        m_x = j * 32 - m_width + 10;
+                        m_x = j * 32 - m_width + 15;
                     }
                     if (m_acceleration_x < 0) {
                         m_x = j * 32 + 32;
