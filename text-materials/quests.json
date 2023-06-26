@@ -14,7 +14,7 @@
           "answers":  ["Не сходится", "К -1/12", "100242"],
           "correct_answer": 1
         },
-        { "text":  "На каком отрезке сходится ∫1/n^2 ",
+        { "text":  "На каком отрезке сходится ∫1/x^2 ",
           "answers":  ["[0, 1]","[1, +∞)", "Не сходится"],
           "correct_answer": 2
         }
@@ -27,7 +27,7 @@
       "end_text": "Спасибо за помощь!",
       "type": "object_collection",
       "content": {
-      "num_items": 2,
+      "num_items": 3,
       "item_type": "book"
     }
     }
