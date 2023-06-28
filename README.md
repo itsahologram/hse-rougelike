@@ -37,8 +37,13 @@
 ### Запуск
 Находясь в директории ``build`` запустите проект 
 ```
-./hse-rougelike
+./hse-roguelike
 ```
+
+В появившемся окне введите "12345". Откроется главное меню: 
+- Для одиночной игры выберете PLAY
+
+
 ## Навигация по репозиторию:
 -  [sfml-network](https://github.com/itsahologram/hse-rougelike/tree/sfml_network) - в данной ветке велась работа с сетью
 - [sfml](https://github.com/itsahologram/hse-rougelike/tree/sfml) - работа с графикой и логикой игры
